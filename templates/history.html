@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Lịch sử{% endblock %}
+{% block content %}
+<section class="page-heading"><div><div class="eyebrow"><span class="eyebrow-dot"></span> AUDIT TRAIL</div><h1>Lịch sử phân tích</h1><p>Các video, kết quả mô phỏng và sự kiện đã được lưu trên máy đang chạy ứng dụng.</p></div><a href="{{ url_for('index') }}" class="button button-outline">← Về tổng quan</a></section>
+<section class="panel history-panel">
+  {% if jobs %}<div class="table-wrap"><table><thead><tr><th>Video</th><th>Nguồn</th><th>Người thực hiện</th><th>Thời gian</th><th>Trạng thái</th><th>Cảnh báo</th><th></th></tr></thead><tbody>{% for job in jobs %}<tr><td><div class="video-name">{{ job.video_name }}</div><small class="muted">ID {{ job.run_id }}</small></td><td>{{ 'Demo' if job.source_type == 'demo' else 'Video tải lên' }}</td><td>{{ job.owner_name or 'Hệ thống' }}</td><td>{{ job.created_at }}</td><td><span class="state state-{{ job.status }}">{{ 'Hoàn tất' if job.status == 'done' else 'Lỗi' }}</span></td><td><span class="alert-count">{{ job.event_count }}</span></td><td><a class="table-action" href="{{ url_for('result', run_id=job.run_id) }}">Chi tiết ↗</a></td></tr>{% endfor %}</tbody></table></div>
+  {% else %}<div class="empty-state"><div class="empty-icon">▤</div><strong>Lịch sử đang trống</strong><p>Chạy demo hoặc tải video để bắt đầu.</p></div>{% endif %}
+</section>
+{% endblock %}

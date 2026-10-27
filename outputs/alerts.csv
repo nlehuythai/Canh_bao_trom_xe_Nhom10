@@ -1,0 +1,2 @@
+﻿timestamp,timestamp_sec,person_id,motorcycle_id,duration_sec,reason
+00:00:05.000,5.0,1,2,5.0,Motorcycle moves while a person remains nearby

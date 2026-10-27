@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Kết quả phân tích{% endblock %}
+{% block content %}
+<section class="page-heading compact-heading"><div><div class="eyebrow"><span class="eyebrow-dot"></span> ANALYSIS RESULT · {{ run_id }}</div><h1>Kết quả phân tích</h1><p>{{ job.video_name }} · {{ job.created_at }}</p></div><a href="{{ url_for('index') }}" class="button button-outline">← Về tổng quan</a></section>
+{% if job.status == 'error' %}
+<section class="panel error-panel"><div class="error-symbol">!</div><div><div class="card-kicker">PROCESSING FAILED</div><h2>Không thể xử lý video</h2><p>Kiểm tra phần thông báo lỗi bên dưới. Nếu báo thiếu thư viện, hãy cài các gói trong <code>requirements.txt</code>. Nếu lỗi tải mô hình, cần kết nối Internet ở lần chạy đầu.</p><pre class="error-log">{{ job.error_message or 'Không có chi tiết lỗi.' }}</pre><a href="{{ url_for('index') }}" class="button button-primary">Thử lại</a></div></section>
+{% else %}
+<section class="result-summary stats-grid">
+  <article class="stat-card panel"><div class="stat-label">Kết quả</div><div class="state state-done">Hoàn tất</div><div class="stat-foot">{{ 'Demo tổng hợp' if job.source_type == 'demo' else 'Video đầu vào' }}</div></article>
+  <article class="stat-card panel"><div class="stat-label">Sự kiện cần xem lại</div><div class="stat-value stat-value-warm">{{ job.event_count }}</div><div class="stat-foot">Không đồng nghĩa với số vụ trộm thực tế</div></article>
+  <article class="stat-card panel"><div class="stat-label">Tệp kết quả</div><div class="stat-value stat-model">{{ 'MP4 + CSV' if csv_exists else 'MP4' }}</div><div class="stat-foot">Video gắn nhãn và nhật ký cảnh báo</div></article>
+</section>
+<section class="panel result-video-panel">
+  <div class="section-heading"><div><div class="card-kicker">ANNOTATED VIDEO</div><h2>Video sau xử lý</h2></div>{% if csv_exists %}<a class="button button-outline button-small" href="{{ url_for('run_file', run_id=run_id, filename='alerts.csv') }}">Tải alerts.csv ↓</a>{% endif %}</div>
+  {% if video_exists %}<video class="result-video" controls preload="metadata"><source src="{{ url_for('run_file', run_id=run_id, filename=job.output_video) }}" type="video/mp4">Trình duyệt không hỗ trợ phát video.</video>{% else %}<div class="empty-state">Không tìm thấy tệp video đầu ra.</div>{% endif %}
+  <div class="video-caption"><span><span class="legend-dot legend-green"></span> Người / đối tượng được phát hiện</span><span><span class="legend-dot legend-red"></span> Sự kiện cần xem lại</span><span class="muted">Video mô phỏng có nhãn SIMULATED SCENE.</span></div>
+</section>
+<section class="panel history-panel">
+  <div class="section-heading"><div><div class="card-kicker">EVENT LOG</div><h2>Danh sách cảnh báo</h2></div><span class="step-tag">{{ events|length }} EVENTS</span></div>
+  {% if events %}<div class="table-wrap"><table><thead><tr><th>Thời điểm</th><th>ID người</th><th>ID xe máy</th><th>Thời gian ở gần (s)</th><th>Lý do cảnh báo</th></tr></thead><tbody>{% for event in events %}<tr><td>{{ event.timestamp or event.timestamp_sec }}</td><td>{{ event.person_id }}</td><td>{{ event.motorcycle_id }}</td><td>{{ event.duration_sec }}</td><td>{{ event.reason }}</td></tr>{% endfor %}</tbody></table></div>
+  {% else %}<div class="empty-state"><div class="empty-icon">✓</div><strong>Không có cảnh báo nào được tạo</strong><p>Điều này không chứng minh video không có hành vi bất thường; mô hình hoặc luật hiện tại có thể bỏ sót.</p></div>{% endif %}
+</section>
+{% if snapshots or demo_frame_exists %}<section class="panel history-panel"><div class="section-heading"><div><div class="card-kicker">SNAPSHOTS</div><h2>Khung hình liên quan</h2></div></div><div class="snapshot-grid">{% for image_name in snapshots %}<a href="{{ url_for('run_file', run_id=run_id, filename=image_name) }}" target="_blank"><img src="{{ url_for('run_file', run_id=run_id, filename=image_name) }}" alt="Khung hình sự kiện"><span>{{ image_name }}</span></a>{% endfor %}{% if demo_frame_exists %}<a href="{{ url_for('run_file', run_id=run_id, filename='demo_frame.png') }}" target="_blank"><img src="{{ url_for('run_file', run_id=run_id, filename='demo_frame.png') }}" alt="Khung hình demo"><span>demo_frame.png</span></a>{% endif %}</div></section>{% endif %}
+{% endif %}
+<div class="bottom-disclaimer">Lưu ý: luật nền đang xét khoảng cách, thời gian tương tác và chuyển động hộp xe. Chủ xe hợp pháp cũng có thể kích hoạt cảnh báo. Nhân viên an ninh cần kiểm tra video và bối cảnh trước khi xử lý.</div>
+{% endblock %}

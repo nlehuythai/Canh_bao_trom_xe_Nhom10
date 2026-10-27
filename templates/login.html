@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Đăng nhập{% endblock %}
+{% block content %}
+<section class="login-layout">
+  <div class="login-presentation">
+    <div class="eyebrow"><span class="eyebrow-dot"></span> COMPUTER VISION · VIDEO ANALYTICS</div>
+    <h1>Nhìn thấy dấu hiệu.<br><span>Phản ứng kịp thời.</span></h1>
+    <p>Phân tích video khu vực gửi xe, theo dõi chuyển động người và xe máy, rồi đưa các sự kiện đáng chú ý tới nhân viên an ninh để xác minh.</p>
+    <div class="feature-list">
+      <div><span class="feature-icon">01</span><span><strong>Phân tích video</strong><small>Chuẩn hóa khung hình và tiền xử lý bằng OpenCV.</small></span></div>
+      <div><span class="feature-icon">02</span><span><strong>Phát hiện & theo dõi</strong><small>YOLO nhận diện người/xe, ByteTrack giữ ID qua thời gian.</small></span></div>
+      <div><span class="feature-icon">03</span><span><strong>Cảnh báo để xác minh</strong><small>Ghi lại thời điểm, đoạn video và lý do cảnh báo.</small></span></div>
+    </div>
+    <div class="privacy-note">⚑ Cảnh báo là tín hiệu cần kiểm tra, không phải kết luận hành vi phạm pháp.</div>
+  </div>
+  <div class="login-card panel">
+    <div class="card-kicker">KHU VỰC TRUY CẬP</div>
+    <h2>Đăng nhập hệ thống</h2>
+    <p class="muted">Dùng tài khoản demo được cung cấp trong README.</p>
+    <form method="post" class="form-stack">
+      <label for="username">Tên đăng nhập</label>
+      <input id="username" name="username" autocomplete="username" placeholder="Ví dụ: baove" required autofocus>
+      <label for="password">Mật khẩu</label>
+      <input id="password" type="password" name="password" autocomplete="current-password" placeholder="Nhập mật khẩu" required>
+      <button class="button button-primary button-full" type="submit">Đăng nhập <span>→</span></button>
+    </form>
+    <div class="login-warning"><strong>Chế độ bài tập</strong><br>Tài khoản mẫu chỉ dùng chạy cục bộ để minh họa phân quyền. Không sử dụng mật khẩu mẫu khi triển khai thật.</div>
+  </div>
+</section>
+{% endblock %}

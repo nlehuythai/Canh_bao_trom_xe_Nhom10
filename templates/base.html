@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}GarageGuard{% endblock %} | Cảnh báo xe máy</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('index') if current_user else url_for('login') }}">
+      <span class="brand-mark">G</span><span><strong>GarageGuard</strong><small>Hệ thống giám sát nhà xe</small></span>
+    </a>
+    {% if current_user %}
+    <nav class="nav-links">
+      <a href="{{ url_for('index') }}">Tổng quan</a>
+      <a href="{{ url_for('history') }}">Lịch sử</a>
+    </nav>
+    <div class="user-area">
+      <span class="user-chip"><span class="online-dot"></span>{{ current_user.display_name }} <em>{{ current_user.role_label }}</em></span>
+      <form action="{{ url_for('logout') }}" method="post"><button class="button button-quiet button-small" type="submit">Đăng xuất</button></form>
+    </div>
+    {% endif %}
+  </header>
+  <main class="page-shell">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}<div class="flash-stack">{% for category, message in messages %}<div class="flash flash-{{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="footer"><span>Đồ án học phần Xử lý ảnh</span><span>Prototype học thuật · Cảnh báo cần con người xác minh</span></footer>
+</body>
+</html>
